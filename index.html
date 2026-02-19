@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá de Panela - Nosso Grande Dia</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Adicionando Google Fonts mais elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Nova paleta de cores mais sofisticada e minimalista */
+        :root {
+            --bg-primary: #fdfcfa;
+            --bg-secondary: #f7f5f2;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-primary: #2d2d2d;
+            --accent-secondary: #8b7355;
+            --accent-light: #c4b5a0;
+            --accent-success: #4a7c59;
+            --accent-warning: #c17f59;
+            --border-subtle: #e8e4de;
+            --shadow-soft: 0 4px 20px rgba(0,0,0,0.04);
+            --shadow-medium: 0 8px 40px rgba(0,0,0,0.08);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Tipografia elegante com fonte serifada para títulos */
+        h1, h2, h3, .modal-title, .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        /* Hero section completamente redesenhada */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+        }
+
+        /* Layout de imagens mais elegante com molduras */
+        .hero-images {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 800px;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            padding: 12px;
+            background: var(--bg-card);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .hero-image {
+            width: 260px;
+            height: 340px;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(10%);
+            transition: var(--transition);
+        }
+
+        .hero-image:hover {
+            filter: grayscale(0%);
+        }
+
+        /* Título principal com estilo editorial */
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
+
+        /* Mensagem com estilo mais refinado */
+        .hero-message {
+            max-width: 560px;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            margin-bottom: 3.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+        }
+
+        /* Botão principal elegante e minimalista */
+        .btn-primary {
+            padding: 1.1rem 3.5rem;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 0;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Seção de presentes redesenhada */
+        .presentes-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            display: none;
+            background: var(--bg-primary);
+        }
+
+        .presentes-section.active {
+            display: block;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        /* Grid de presentes mais espaçado e limpo */
+        .presentes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* Cartão de presente minimalista */
+        .presente-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 0;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .presente-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-secondary);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .presente-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .presente-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .presente-card.reservado {
+            opacity: 0.6;
+        }
+
+        .presente-card.reservado::before {
+            background: var(--accent-warning);
+            transform: scaleX(1);
+        }
+
+        .presente-nome {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .presente-descricao {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .presente-cor {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .presente-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .status-disponivel {
+            background-color: rgba(74, 124, 89, 0.1);
+            color: var(--accent-success);
+        }
+
+        .status-reservado {
+            background-color: rgba(193, 127, 89, 0.1);
+            color: var(--accent-warning);
+        }
+
+        /* Botão de reserva mais elegante */
+        .btn-reservar {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--accent-primary);
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-primary);
+        }
+
+        .btn-reservar.disponivel:hover {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-reservar.reservado {
+            border-color: var(--border-subtle);
+            color: var(--text-muted);
+        }
+
+        .btn-reservar.reservado:hover {
+            border-color: var(--accent-warning);
+            color: var(--accent-warning);
+        }
+
+        /* Filtros redesenhados */
+        .filter-container {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0 0 4rem 0;
+            padding: 0 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.8rem;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Modais redesenhados */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 3rem;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: var(--shadow-medium);
+            animation: modalSlide 0.4s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border-subtle);
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            background: var(--bg-card);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 1rem;
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: var(--transition);
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+        }
+
+        .btn-confirm {
+            flex: 1;
+            padding: 1rem;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: var(--transition);
+        }
+
+        .btn-confirm:hover {
+            background-color: var(--accent-secondary);
+        }
+
+        /* Admin section redesenhada */
+        .admin-section {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .admin-header .section-title {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .btn-logout {
+            padding: 0.8rem 2rem;
+            background-color: transparent;
+            color: var(--accent-warning);
+            border: 1px solid var(--accent-warning);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: var(--transition);
+        }
+
+        .btn-logout:hover {
+            background-color: var(--accent-warning);
+            color: white;
+        }
+
+        /* Dashboard cards modernos */
+        .admin-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-secondary);
+        }
+
+        .stat-card.reserved::after {
+            background: var(--accent-warning);
+        }
+
+        .stat-card.available::after {
+            background: var(--accent-success);
+        }
+
+        .stat-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .admin-form {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .admin-form h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        /* Rodapé minimalista */
+        .footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 4rem;
+        }
+
+        .footer p:first-child {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .admin-trigger {
+            cursor: pointer;
+            opacity: 0.2;
+            transition: var(--transition);
+            display: inline-block;
+            padding: 0.5rem;
+        }
+
+        .admin-trigger:hover {
+            opacity: 1;
+        }
+
+        /* Lista de presentes admin */
+        .admin-presente-item {
+            padding: 1.5rem;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 1rem;
+            background: var(--bg-card);
+            transition: var(--transition);
+        }
+
+        .admin-presente-item:hover {
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-remove {
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            background: transparent;
+            color: #c44;
+            border: 1px solid #c44;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: var(--transition);
+        }
+
+        .btn-remove:hover {
+            background: #c44;
+            color: white;
+        }
+
+        /* Botão Minhas Reservas */
+        .btn-minhas-reservas {
+            padding: 0.8rem 2rem;
+            background: transparent;
+            border: 1px solid var(--accent-secondary);
+            color: var(--accent-secondary);
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: var(--transition);
+        }
+
+        .btn-minhas-reservas:hover {
+            background: var(--accent-secondary);
+            color: white;
+        }
+
+        .minhas-reservas-lista {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .minha-reserva-item {
+            padding: 1.2rem;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 0.75rem;
+            background: var(--bg-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .minha-reserva-item strong {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .minha-reserva-item .info {
+            flex: 1;
+        }
+
+        .minha-reserva-item .info small {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn-cancelar-reserva {
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            background: transparent;
+            color: var(--accent-warning);
+            border: 1px solid var(--accent-warning);
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn-cancelar-reserva:hover {
+            background: var(--accent-warning);
+            color: white;
+        }
+
+        .sem-reservas {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 2rem 0;
+        }
+
+        /* Responsividade melhorada */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 0.2em;
+            }
+            
+            .hero-image {
+                width: 100%;
+                max-width: 280px;
+                height: 300px;
+            }
+
+            .hero-images {
+                gap: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .presentes-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .filter-container {
+                gap: 0.4rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.7rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        /* Animação suave de scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Seleção de texto personalizada */
+        ::selection {
+            background: var(--accent-light);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Boas-Vindas -->
+    <section id="heroSection" class="hero-section">
+        <div class="hero-images">
+            <!-- SUBSTITUA ESTAS URLs PELAS SUAS FOTOS -->
+            <!-- Wrapper de imagem para efeito de moldura -->
+            <div class="hero-image-wrapper">
+                <img src="/placeholder.svg?height=340&width=260" alt="Foto 1" class="hero-image">
+            </div>
+            <div class="hero-image-wrapper">
+                <img src="/placeholder.svg?height=340&width=260" alt="Foto 2" class="hero-image">
+            </div>
+        </div>
+        
+        <h1 class="hero-title">Nosso Chá de Panela</h1>
+        <p class="hero-subtitle">Estamos começando uma nova jornada juntos</p>
+        
+        <p class="hero-message">
+            Queridos amigos e familiares, estamos muito felizes em compartilhar este momento especial com vocês.
+            Preparamos com carinho uma lista de presentes que nos ajudarão a construir nosso lar.
+            Sua presença e generosidade significam muito para nós.
+        </p>
+        
+        <button class="btn-primary" onclick="mostrarPresentes()">Ver Lista de Presentes</button>
+    </section>
+
+    <!-- Seção de Presentes -->
+    <section id="presentesSection" class="presentes-section">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Escolha com carinho</p>
+                <h2 class="section-title">Nossa Lista de Presentes</h2>
+            </div>
+            
+            <div class="filter-container">
+                <button class="filter-btn active" onclick="filtrarCategoria('todas')">Todas</button>
+                <button class="filter-btn" onclick="filtrarCategoria('mesa')">Mesa</button>
+                <button class="filter-btn" onclick="filtrarCategoria('cozinha')">Cozinha</button>
+                <button class="filter-btn" onclick="filtrarCategoria('eletrodomesticos')">Eletrodomésticos</button>
+                <button class="filter-btn" onclick="filtrarCategoria('cama')">Cama & Banho</button>
+                <button class="filter-btn" onclick="filtrarCategoria('decoracao')">Decoração</button>
+                <button class="filter-btn" onclick="filtrarCategoria('outros')">Outros</button>
+            </div>
+            
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <button class="btn-minhas-reservas" onclick="abrirMinhasReservas()">Minhas Reservas</button>
+            </div>
+
+            <div id="presentesGrid" class="presentes-grid"></div>
+            <div style="text-align: center; margin-top: 4rem;">
+                <button class="btn-primary" onclick="voltarInicio()">Voltar ao Inicio</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Admin -->
+    <section id="adminSection" class="admin-section">
+        <div class="admin-header">
+            <h2 class="section-title">Painel Administrativo</h2>
+            <button class="btn-logout" onclick="sairAdmin()">Sair</button>
+        </div>
+
+        <div class="admin-dashboard">
+            <div class="stat-card">
+                <div class="stat-label">Total de Presentes</div>
+                <div class="stat-number" id="statTotal">0</div>
+            </div>
+            <div class="stat-card reserved">
+                <div class="stat-label">Reservados</div>
+                <div class="stat-number" id="statReservados">0</div>
+            </div>
+            <div class="stat-card available">
+                <div class="stat-label">Disponíveis</div>
+                <div class="stat-number" id="statDisponiveis">0</div>
+            </div>
+        </div>
+
+        <div class="admin-form">
+            <h3>Adicionar Novo Presente</h3>
+            <form id="adminForm" onsubmit="adicionarPresente(event)">
+                <div class="form-group">
+                    <label class="form-label">Nome do Presente</label>
+                    <input type="text" class="form-input" id="adminNome" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descrição (opcional)</label>
+                    <input type="text" class="form-input" id="adminDescricao">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Categoria</label>
+                    <select class="form-input" id="adminCategoria" required>
+                        <option value="mesa">Mesa</option>
+                        <option value="cozinha">Cozinha</option>
+                        <option value="eletrodomesticos">Eletrodomésticos</option>
+                        <option value="cama">Cama & Banho</option>
+                        <option value="decoracao">Decoração</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Cor do Presente (opcional)</label>
+                    <input type="text" class="form-input" id="adminCor" placeholder="Ex: Azul, Branco, Vermelho...">
+                </div>
+                
+                <button type="submit" class="btn-primary">Adicionar Presente</button>
+            </form>
+        </div>
+
+        <div style="background: var(--bg-card); padding: 2.5rem; box-shadow: var(--shadow-soft); border: 1px solid var(--border-subtle);">
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; margin-bottom: 2rem;">Presentes Cadastrados</h3>
+            <div id="adminPresentesList"></div>
+        </div>
+    </section>
+
+    <!-- Modal de Reserva -->
+    <div id="modalReserva" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modalTitle">Reservar Presente</h2>
+            <form onsubmit="confirmarReserva(event)">
+                <div class="form-group">
+                    <label class="form-label">Seu Nome</label>
+                    <input type="text" class="form-input" id="nomeConvidado" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn-confirm" id="btnConfirmar">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Login Admin -->
+    <div id="modalAdmin" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Acesso Administrativo</h2>
+            <form onsubmit="logarAdmin(event)">
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" class="form-input" id="senhaAdmin" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalAdmin()">Cancelar</button>
+                    <button type="submit" class="btn-confirm">Entrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Buscar Minhas Reservas -->
+    <div id="modalBuscarReservas" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Minhas Reservas</h2>
+            <form onsubmit="buscarMinhasReservas(event)">
+                <div class="form-group">
+                    <label class="form-label">Digite seu nome</label>
+                    <input type="text" class="form-input" id="nomeBusca" required placeholder="O mesmo nome usado na reserva">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="fecharModalBuscarReservas()">Fechar</button>
+                    <button type="submit" class="btn-confirm">Buscar</button>
+                </div>
+            </form>
+            <div id="minhasReservasResultado" style="margin-top: 2rem; display: none;">
+                <div style="height: 1px; background: var(--border-subtle); margin-bottom: 1.5rem;"></div>
+                <div id="minhasReservasLista" class="minhas-reservas-lista"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <p>Feito com amor para nosso grande dia</p>
+        <p class="admin-trigger" onclick="abrirModalAdmin()">©</p>
+    </footer>
+
+    <script>
+        // CONFIGURAÇÃO DO SUPABASE
+        const SUPABASE_URL = 'https://xbotnpnfztfbbjcsclce.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhib3RucG5menRmYmJqY3NjbGNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNDAzNzAsImV4cCI6MjA4MTkxNjM3MH0.EFGk2OZgkX6Xodarqmr_e3NvS8c0PSWFEtEp-2HSHF0';
+        const SENHA_ADMIN = 'murilo';
+
+        const { createClient } = window.supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let presenteSelecionado = null;
+        let acaoModal = null;
+        let categoriaAtual = 'todas';
+        let nomeReservadoPor = null;
+        let modoAdmin = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarPresentes();
+        });
+
+        function mostrarPresentes() {
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('presentesSection').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function voltarInicio() {
+            document.getElementById('presentesSection').classList.remove('active');
+            document.getElementById('heroSection').style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function carregarPresentes() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('presentes')
+                    .select('*')
+                    .order('id', { ascending: true });
+
+                if (error) throw error;
+
+                renderizarPresentes(data || []);
+            } catch (error) {
+                console.error('Erro ao carregar presentes:', error);
+            }
+        }
+
+        function renderizarPresentes(presentes) {
+            const grid = document.getElementById('presentesGrid');
+            
+            const presentesFiltrados = categoriaAtual === 'todas' 
+                ? presentes 
+                : presentes.filter(p => p.categoria === categoriaAtual);
+            
+            if (presentesFiltrados.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); grid-column: 1/-1; padding: 4rem 0; font-style: italic;">Nenhum presente encontrado nesta categoria.</p>';
+                return;
+            }
+
+            grid.innerHTML = presentesFiltrados.map(presente => `
+                <div class="presente-card ${presente.reservado ? 'reservado' : ''}">
+                    <h3 class="presente-nome">${presente.nome}</h3>
+                    ${presente.descricao ? `<p class="presente-descricao">${presente.descricao}</p>` : ''}
+                    ${presente.cor ? `<span class="presente-cor">Cor: ${presente.cor}</span>` : ''}
+                    <div class="presente-status">
+                        <span class="status-badge ${presente.reservado ? 'status-reservado' : 'status-disponivel'}">
+                            ${presente.reservado ? 'Reservado' : 'Disponível'}
+                        </span>
+                    </div>
+                    <button class="btn-reservar ${presente.reservado ? 'reservado' : 'disponivel'}" 
+                            onclick="abrirModalReserva(${presente.id}, ${presente.reservado}, '${presente.reservado_por || ''}')">
+                        ${presente.reservado ? 'Cancelar Reserva' : 'Quero Presentear'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function filtrarCategoria(categoria) {
+            categoriaAtual = categoria;
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            carregarPresentes();
+        }
+
+        function abrirModalReserva(id, reservado, reservadoPor) {
+            presenteSelecionado = id;
+            nomeReservadoPor = reservadoPor;
+            acaoModal = reservado ? 'cancelar' : 'reservar';
+            
+            const modal = document.getElementById('modalReserva');
+            const titulo = document.getElementById('modalTitle');
+            const input = document.getElementById('nomeConvidado');
+            const btnConfirmar = document.getElementById('btnConfirmar');
+
+            titulo.textContent = reservado ? 'Cancelar Reserva' : 'Reservar Presente';
+            input.value = '';
+            input.readOnly = false;
+            btnConfirmar.textContent = reservado ? 'Cancelar Reserva' : 'Confirmar Reserva';
+
+            modal.classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalReserva').classList.remove('active');
+            document.getElementById('nomeConvidado').value = '';
+            presenteSelecionado = null;
+            acaoModal = null;
+            nomeReservadoPor = null;
+        }
+
+        async function confirmarReserva(event) {
+            event.preventDefault();
+            
+            const nome = document.getElementById('nomeConvidado').value.trim();
+            if (!nome) return;
+
+            try {
+                if (acaoModal === 'reservar') {
+                    const { error } = await supabaseClient
+                        .from('presentes')
+                        .update({ reservado: true, reservado_por: nome })
+                        .eq('id', presenteSelecionado);
+
+                    if (error) throw error;
+                    alert('Presente reservado com sucesso!');
+                } else {
+                    if (nome.toLowerCase() !== nomeReservadoPor.toLowerCase()) {
+                        alert('Apenas quem reservou pode cancelar! Verifique o nome digitado.');
+                        return;
+                    }
+                    
+                    const { error } = await supabaseClient
+                        .from('presentes')
+                        .update({ reservado: false, reservado_por: null })
+                        .eq('id', presenteSelecionado);
+
+                    if (error) throw error;
+                    alert('Reserva cancelada com sucesso!');
+                }
+
+                fecharModal();
+                carregarPresentes();
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao processar sua solicitação.');
+            }
+        }
+
+        function abrirModalAdmin() {
+            document.getElementById('modalAdmin').classList.add('active');
+        }
+
+        function fecharModalAdmin() {
+            document.getElementById('modalAdmin').classList.remove('active');
+            document.getElementById('senhaAdmin').value = '';
+        }
+
+        function logarAdmin(event) {
+            event.preventDefault();
+            const senha = document.getElementById('senhaAdmin').value;
+            
+            if (senha === SENHA_ADMIN) {
+                fecharModalAdmin();
+                document.getElementById('heroSection').style.display = 'none';
+                document.getElementById('presentesSection').classList.remove('active');
+                document.getElementById('adminSection').classList.add('active');
+                carregarPresentesAdmin();
+                modoAdmin = true;
+            } else {
+                alert('Senha incorreta!');
+            }
+        }
+
+        function sairAdmin() {
+            document.getElementById('adminSection').classList.remove('active');
+            document.getElementById('heroSection').style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            modoAdmin = false;
+        }
+
+        async function adicionarPresente(event) {
+            event.preventDefault();
+            
+            const nome = document.getElementById('adminNome').value;
+            const descricao = document.getElementById('adminDescricao').value;
+            const categoria = document.getElementById('adminCategoria').value;
+            const cor = document.getElementById('adminCor').value;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('presentes')
+                    .insert([
+                        { nome, descricao, categoria, cor, reservado: false }
+                    ])
+                    .select();
+
+                if (error) throw error;
+
+                alert('Presente adicionado com sucesso!');
+                document.getElementById('adminForm').reset();
+                carregarPresentes();
+                carregarPresentesAdmin();
+            } catch (error) {
+                console.error('Erro ao adicionar presente:', error);
+                alert('Erro ao adicionar presente: ' + error.message);
+            }
+        }
+
+        async function carregarPresentesAdmin() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('presentes')
+                    .select('*')
+                    .order('id', { ascending: true });
+
+                if (error) throw error;
+
+                const total = data?.length || 0;
+                const reservados = data?.filter(p => p.reservado).length || 0;
+                const disponiveis = total - reservados;
+
+                document.getElementById('statTotal').textContent = total;
+                document.getElementById('statReservados').textContent = reservados;
+                document.getElementById('statDisponiveis').textContent = disponiveis;
+
+                renderizarPresentesAdmin(data || []);
+            } catch (error) {
+                console.error('Erro ao carregar presentes:', error);
+            }
+        }
+
+        function renderizarPresentesAdmin(presentes) {
+            const lista = document.getElementById('adminPresentesList');
+            
+            if (presentes.length === 0) {
+                lista.innerHTML = '<p style="color: var(--text-muted); font-style: italic;">Nenhum presente cadastrado.</p>';
+                return;
+            }
+
+            lista.innerHTML = presentes.map(presente => `
+                <div class="admin-presente-item">
+                    <div style="display: flex; align-items: start; gap: 1.5rem;">
+                        <div style="flex: 1;">
+                            <strong style="font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 500;">${presente.nome}</strong>
+                            ${presente.descricao ? `<p style="margin: 0.5rem 0; color: var(--text-secondary); font-size: 0.9rem;">${presente.descricao}</p>` : ''}
+                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                                ${presente.cor ? `<span style="font-size: 0.8rem; color: var(--text-muted);">Cor: ${presente.cor}</span>` : ''}
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Categoria: ${presente.categoria || 'Não definida'}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-end;">
+                            <span style="padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; background: ${presente.reservado ? 'rgba(193, 127, 89, 0.1)' : 'rgba(74, 124, 89, 0.1)'}; color: ${presente.reservado ? 'var(--accent-warning)' : 'var(--accent-success)'};">
+                                ${presente.reservado ? `Reservado: ${presente.reservado_por}` : 'Disponível'}
+                            </span>
+                            <button class="btn-remove" onclick="removerPresente(${presente.id})">
+                                Remover
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function abrirMinhasReservas() {
+            document.getElementById('modalBuscarReservas').classList.add('active');
+            document.getElementById('nomeBusca').value = '';
+            document.getElementById('minhasReservasResultado').style.display = 'none';
+        }
+
+        function fecharModalBuscarReservas() {
+            document.getElementById('modalBuscarReservas').classList.remove('active');
+            document.getElementById('nomeBusca').value = '';
+            document.getElementById('minhasReservasResultado').style.display = 'none';
+        }
+
+        async function buscarMinhasReservas(event) {
+            event.preventDefault();
+            const nome = document.getElementById('nomeBusca').value.trim();
+            if (!nome) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('presentes')
+                    .select('*')
+                    .eq('reservado', true)
+                    .order('id', { ascending: true });
+
+                if (error) throw error;
+
+                const minhasReservas = (data || []).filter(p => 
+                    p.reservado_por && p.reservado_por.toLowerCase() === nome.toLowerCase()
+                );
+
+                const resultado = document.getElementById('minhasReservasResultado');
+                const lista = document.getElementById('minhasReservasLista');
+                resultado.style.display = 'block';
+
+                if (minhasReservas.length === 0) {
+                    lista.innerHTML = '<p class="sem-reservas">Nenhuma reserva encontrada para este nome.</p>';
+                    return;
+                }
+
+                lista.innerHTML = minhasReservas.map(p => `
+                    <div class="minha-reserva-item">
+                        <div class="info">
+                            <strong>${p.nome}</strong>
+                            <small>${p.categoria ? p.categoria : ''}${p.cor ? ' &middot; Cor: ' + p.cor : ''}</small>
+                        </div>
+                        <button class="btn-cancelar-reserva" onclick="cancelarMinhaReserva(${p.id}, '${nome.replace(/'/g, "\\'")}')">Cancelar</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao buscar reservas:', error);
+                alert('Erro ao buscar reservas.');
+            }
+        }
+
+        async function cancelarMinhaReserva(id, nome) {
+            if (!confirm('Deseja cancelar esta reserva?')) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('presentes')
+                    .update({ reservado: false, reservado_por: null })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('Reserva cancelada com sucesso!');
+                carregarPresentes();
+                // Recarregar a lista de reservas
+                document.getElementById('nomeBusca').value = nome;
+                buscarMinhasReservas(new Event('submit'));
+            } catch (error) {
+                console.error('Erro ao cancelar reserva:', error);
+                alert('Erro ao cancelar reserva.');
+            }
+        }
+
+        async function removerPresente(id) {
+            if (!confirm('Tem certeza que deseja remover este presente?')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient
+                    .from('presentes')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('Presente removido com sucesso!');
+                carregarPresentes();
+                carregarPresentesAdmin();
+            } catch (error) {
+                console.error('Erro ao remover presente:', error);
+                alert('Erro ao remover presente: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
