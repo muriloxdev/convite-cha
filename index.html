@@ -743,47 +743,156 @@
             padding: 2rem 0;
         }
 
-        /* Responsividade melhorada */
-        @media (max-width: 768px) {
+        /* Responsividade - Tablets */
+        @media (max-width: 1024px) {
+            .presentes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+
+            .presentes-section {
+                padding: 4rem 1.5rem;
+            }
+
             .hero-title {
-                font-size: 2.8rem;
+                font-size: 3.5rem;
+            }
+
+            .section-title {
+                font-size: 3rem;
+            }
+
+            .dashboard-stats {
+                gap: 1rem;
+            }
+        }
+
+        /* Responsividade - Mobile */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 1.5rem;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
             }
 
             .hero-subtitle {
-                font-size: 0.8rem;
-                letter-spacing: 0.2em;
+                font-size: 0.75rem;
+                letter-spacing: 0.15em;
+                margin-bottom: 2rem;
             }
             
             .hero-image {
                 width: 100%;
-                max-width: 280px;
-                height: 300px;
+                max-width: 200px;
+                height: 260px;
+            }
+
+            .hero-image-wrapper {
+                padding: 8px;
             }
 
             .hero-images {
-                gap: 1.5rem;
+                gap: 1rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .hero-message {
+                font-size: 1.05rem;
+                line-height: 1.7;
+                margin-bottom: 2.5rem;
+                padding: 0 0.5rem;
+            }
+
+            .btn-primary {
+                padding: 1rem 2.5rem;
+                font-size: 0.75rem;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .presentes-section {
+                padding: 3rem 1rem;
+            }
+
+            .section-header {
+                margin-bottom: 2.5rem;
             }
 
             .section-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.8rem;
             }
 
             .presentes-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 1.25rem;
+            }
+
+            .presente-card {
+                padding: 1.5rem;
+            }
+
+            .presente-card:hover {
+                transform: none;
+            }
+
+            .presente-nome {
+                font-size: 1.4rem;
             }
 
             .filter-container {
                 gap: 0.4rem;
+                margin-bottom: 2.5rem;
+                padding: 0 0.5rem;
             }
 
             .filter-btn {
                 padding: 0.6rem 1rem;
-                font-size: 0.7rem;
+                font-size: 0.65rem;
+            }
+
+            .btn-minhas-reservas {
+                width: 100%;
+                max-width: 300px;
+                padding: 0.7rem 1.5rem;
             }
 
             .modal-content {
-                padding: 2rem;
+                padding: 1.75rem;
+                width: 94%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .form-input, .form-select {
+                padding: 0.85rem;
+                font-size: 0.95rem;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+                gap: 0.75rem;
+            }
+
+            .btn-cancel, .btn-confirm {
+                width: 100%;
+                text-align: center;
+            }
+
+            .admin-section {
+                padding: 2rem 1rem;
             }
 
             .admin-header {
@@ -791,14 +900,114 @@
                 gap: 1rem;
                 text-align: center;
             }
+
+            .admin-header h2 {
+                font-size: 2rem;
+            }
+
+            .dashboard-stats {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .admin-presente-item {
+                padding: 1.25rem;
+            }
+
+            .admin-presente-item > div {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .admin-presente-item > div > div:last-child {
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .btn-remove {
+                width: auto;
+            }
+
+            .minha-reserva-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .btn-cancelar-reserva {
+                width: 100%;
+                text-align: center;
+            }
+
+            .footer {
+                padding: 2rem 1rem;
+            }
         }
 
-        /* Animação suave de scroll */
+        /* Responsividade - Mobile pequeno */
+        @media (max-width: 400px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-image {
+                max-width: 160px;
+                height: 210px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .presente-nome {
+                font-size: 1.25rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Animacao suave de scroll */
         html {
             scroll-behavior: smooth;
         }
 
-        /* Seleção de texto personalizada */
+        /* Touch-friendly: areas de toque maiores */
+        @media (pointer: coarse) {
+            .btn-reservar, .btn-primary, .btn-minhas-reservas, .filter-btn {
+                min-height: 48px;
+            }
+
+            .btn-cancelar-reserva, .btn-remove {
+                min-height: 44px;
+                padding: 0.65rem 1.25rem;
+            }
+
+            .form-input, .form-select {
+                min-height: 48px;
+            }
+        }
+
+        /* Prevenir zoom indesejado em inputs no iOS */
+        @media screen and (max-width: 768px) {
+            input[type="text"], input[type="number"], select, textarea {
+                font-size: 16px;
+            }
+        }
+
+        /* Selecao de texto personalizada */
         ::selection {
             background: var(--accent-light);
             color: var(--text-primary);
@@ -1455,6 +1664,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
