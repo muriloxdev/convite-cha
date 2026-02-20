@@ -650,6 +650,19 @@
             color: white;
         }
 
+        .presente-vagas {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-secondary);
+            padding: 0.3rem 0.75rem;
+            background: rgba(193, 127, 89, 0.08);
+            border: 1px solid rgba(193, 127, 89, 0.2);
+            margin-top: 0.5rem;
+        }
+
         /* Botão Minhas Reservas */
         .btn-minhas-reservas {
             padding: 0.8rem 2rem;
@@ -799,10 +812,10 @@
             <!-- SUBSTITUA ESTAS URLs PELAS SUAS FOTOS -->
             <!-- Wrapper de imagem para efeito de moldura -->
             <div class="hero-image-wrapper">
-                <img src="img/foto1.jpg" alt="Foto 1" class="hero-image">
+                <img src="/placeholder.svg?height=340&width=260" alt="Foto 1" class="hero-image">
             </div>
             <div class="hero-image-wrapper">
-                <img src="img/foto2.jpg" alt="Foto 2" class="hero-image">
+                <img src="/placeholder.svg?height=340&width=260" alt="Foto 2" class="hero-image">
             </div>
         </div>
         
@@ -812,7 +825,7 @@
         <p class="hero-message">
             Queridos amigos e familiares, estamos muito felizes em compartilhar este momento especial com vocês.
             Preparamos com carinho uma lista de presentes que nos ajudarão a construir nosso lar.
-            Sua presença significa muito para nós.
+            Sua presença e generosidade significam muito para nós.
         </p>
         
         <button class="btn-primary" onclick="mostrarPresentes()">Ver Lista de Presentes</button>
@@ -896,6 +909,12 @@
                 <div class="form-group">
                     <label class="form-label">Cor do Presente (opcional)</label>
                     <input type="text" class="form-input" id="adminCor" placeholder="Ex: Azul, Branco, Vermelho...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Quantidade de vagas</label>
+                    <input type="number" class="form-input" id="adminVagas" min="1" value="1" required>
+                    <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Quantas pessoas podem escolher este presente (ex: 1 = apenas uma pessoa, 3 = até 3 pessoas)</small>
                 </div>
                 
                 <button type="submit" class="btn-primary">Adicionar Presente</button>
@@ -1027,22 +1046,38 @@
                 return;
             }
 
-            grid.innerHTML = presentesFiltrados.map(presente => `
-                <div class="presente-card ${presente.reservado ? 'reservado' : ''}">
+            grid.innerHTML = presentesFiltrados.map(presente => {
+                const vagas = presente.vagas || 1;
+                const nomes = presente.reservados_nomes || [];
+                const vagasOcupadas = nomes.length;
+                const vagasRestantes = vagas - vagasOcupadas;
+                const esgotado = vagasRestantes <= 0;
+
+                return `
+                <div class="presente-card ${esgotado ? 'reservado' : ''}">
                     <h3 class="presente-nome">${presente.nome}</h3>
                     ${presente.descricao ? `<p class="presente-descricao">${presente.descricao}</p>` : ''}
                     ${presente.cor ? `<span class="presente-cor">Cor: ${presente.cor}</span>` : ''}
+                    ${vagas > 1 ? `<span class="presente-vagas">${vagasRestantes} de ${vagas} vagas restantes</span>` : ''}
                     <div class="presente-status">
-                        <span class="status-badge ${presente.reservado ? 'status-reservado' : 'status-disponivel'}">
-                            ${presente.reservado ? 'Reservado' : 'Disponível'}
+                        <span class="status-badge ${esgotado ? 'status-reservado' : 'status-disponivel'}">
+                            ${esgotado ? 'Esgotado' : 'Disponível'}
                         </span>
                     </div>
-                    <button class="btn-reservar ${presente.reservado ? 'reservado' : 'disponivel'}" 
-                            onclick="abrirModalReserva(${presente.id}, ${presente.reservado}, '${presente.reservado_por || ''}')">
-                        ${presente.reservado ? 'Cancelar Reserva' : 'Quero Presentear'}
-                    </button>
+                    ${!esgotado ? `
+                        <button class="btn-reservar disponivel" 
+                                onclick="abrirModalReserva(${presente.id}, false, '')">
+                            Quero Presentear
+                        </button>
+                    ` : `
+                        <button class="btn-reservar reservado" 
+                                onclick="abrirModalCancelar(${presente.id})">
+                            Cancelar Reserva
+                        </button>
+                    `}
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function filtrarCategoria(categoria) {
@@ -1058,18 +1093,34 @@
 
         function abrirModalReserva(id, reservado, reservadoPor) {
             presenteSelecionado = id;
-            nomeReservadoPor = reservadoPor;
-            acaoModal = reservado ? 'cancelar' : 'reservar';
+            acaoModal = 'reservar';
             
             const modal = document.getElementById('modalReserva');
             const titulo = document.getElementById('modalTitle');
             const input = document.getElementById('nomeConvidado');
             const btnConfirmar = document.getElementById('btnConfirmar');
 
-            titulo.textContent = reservado ? 'Cancelar Reserva' : 'Reservar Presente';
+            titulo.textContent = 'Reservar Presente';
             input.value = '';
             input.readOnly = false;
-            btnConfirmar.textContent = reservado ? 'Cancelar Reserva' : 'Confirmar Reserva';
+            btnConfirmar.textContent = 'Confirmar Reserva';
+
+            modal.classList.add('active');
+        }
+
+        function abrirModalCancelar(id) {
+            presenteSelecionado = id;
+            acaoModal = 'cancelar';
+            
+            const modal = document.getElementById('modalReserva');
+            const titulo = document.getElementById('modalTitle');
+            const input = document.getElementById('nomeConvidado');
+            const btnConfirmar = document.getElementById('btnConfirmar');
+
+            titulo.textContent = 'Cancelar Reserva';
+            input.value = '';
+            input.readOnly = false;
+            btnConfirmar.textContent = 'Cancelar Reserva';
 
             modal.classList.add('active');
         }
@@ -1079,7 +1130,6 @@
             document.getElementById('nomeConvidado').value = '';
             presenteSelecionado = null;
             acaoModal = null;
-            nomeReservadoPor = null;
         }
 
         async function confirmarReserva(event) {
@@ -1089,23 +1139,60 @@
             if (!nome) return;
 
             try {
+                // Buscar presente atual
+                const { data: presente, error: fetchError } = await supabaseClient
+                    .from('presentes')
+                    .select('*')
+                    .eq('id', presenteSelecionado)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                const vagas = presente.vagas || 1;
+                let nomes = presente.reservados_nomes || [];
+
                 if (acaoModal === 'reservar') {
+                    if (nomes.length >= vagas) {
+                        alert('Este presente ja esta totalmente reservado!');
+                        return;
+                    }
+
+                    if (nomes.some(n => n.toLowerCase() === nome.toLowerCase())) {
+                        alert('Voce ja reservou este presente!');
+                        return;
+                    }
+
+                    nomes.push(nome);
+                    const esgotado = nomes.length >= vagas;
+
                     const { error } = await supabaseClient
                         .from('presentes')
-                        .update({ reservado: true, reservado_por: nome })
+                        .update({ 
+                            reservados_nomes: nomes, 
+                            reservado: esgotado,
+                            reservado_por: nomes.join(', ')
+                        })
                         .eq('id', presenteSelecionado);
 
                     if (error) throw error;
                     alert('Presente reservado com sucesso!');
                 } else {
-                    if (nome.toLowerCase() !== nomeReservadoPor.toLowerCase()) {
-                        alert('Apenas quem reservou pode cancelar! Verifique o nome digitado.');
+                    const index = nomes.findIndex(n => n.toLowerCase() === nome.toLowerCase());
+                    
+                    if (index === -1) {
+                        alert('Seu nome nao foi encontrado nas reservas deste presente. Verifique o nome digitado.');
                         return;
                     }
-                    
+
+                    nomes.splice(index, 1);
+
                     const { error } = await supabaseClient
                         .from('presentes')
-                        .update({ reservado: false, reservado_por: null })
+                        .update({ 
+                            reservados_nomes: nomes, 
+                            reservado: false,
+                            reservado_por: nomes.length > 0 ? nomes.join(', ') : null
+                        })
                         .eq('id', presenteSelecionado);
 
                     if (error) throw error;
@@ -1116,7 +1203,7 @@
                 carregarPresentes();
             } catch (error) {
                 console.error('Erro:', error);
-                alert('Erro ao processar sua solicitação.');
+                alert('Erro ao processar sua solicitacao.');
             }
         }
 
@@ -1159,12 +1246,13 @@
             const descricao = document.getElementById('adminDescricao').value;
             const categoria = document.getElementById('adminCategoria').value;
             const cor = document.getElementById('adminCor').value;
+            const vagas = parseInt(document.getElementById('adminVagas').value) || 1;
 
             try {
                 const { data, error } = await supabaseClient
                     .from('presentes')
                     .insert([
-                        { nome, descricao, categoria, cor, reservado: false }
+                        { nome, descricao, categoria, cor, reservado: false, vagas, reservados_nomes: [] }
                     ])
                     .select();
 
@@ -1211,7 +1299,13 @@
                 return;
             }
 
-            lista.innerHTML = presentes.map(presente => `
+            lista.innerHTML = presentes.map(presente => {
+                const vagas = presente.vagas || 1;
+                const nomes = presente.reservados_nomes || [];
+                const vagasOcupadas = nomes.length;
+                const vagasRestantes = vagas - vagasOcupadas;
+
+                return `
                 <div class="admin-presente-item">
                     <div style="display: flex; align-items: start; gap: 1.5rem;">
                         <div style="flex: 1;">
@@ -1219,12 +1313,21 @@
                             ${presente.descricao ? `<p style="margin: 0.5rem 0; color: var(--text-secondary); font-size: 0.9rem;">${presente.descricao}</p>` : ''}
                             <div style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
                                 ${presente.cor ? `<span style="font-size: 0.8rem; color: var(--text-muted);">Cor: ${presente.cor}</span>` : ''}
-                                <span style="font-size: 0.8rem; color: var(--text-muted);">Categoria: ${presente.categoria || 'Não definida'}</span>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Categoria: ${presente.categoria || 'Nao definida'}</span>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Vagas: ${vagasOcupadas}/${vagas}</span>
                             </div>
+                            ${nomes.length > 0 ? `
+                                <div style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(193, 127, 89, 0.05); border: 1px solid var(--border-subtle);">
+                                    <span style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-secondary);">Reservado por:</span>
+                                    <div style="margin-top: 0.25rem;">
+                                        ${nomes.map(n => `<span style="font-size: 0.85rem; color: var(--text-secondary); display: inline-block; margin-right: 0.5rem;">${n}</span>`).join(' &middot; ')}
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-end;">
-                            <span style="padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; background: ${presente.reservado ? 'rgba(193, 127, 89, 0.1)' : 'rgba(74, 124, 89, 0.1)'}; color: ${presente.reservado ? 'var(--accent-warning)' : 'var(--accent-success)'};">
-                                ${presente.reservado ? `Reservado: ${presente.reservado_por}` : 'Disponível'}
+                            <span style="padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; background: ${vagasRestantes <= 0 ? 'rgba(193, 127, 89, 0.1)' : 'rgba(74, 124, 89, 0.1)'}; color: ${vagasRestantes <= 0 ? 'var(--accent-warning)' : 'var(--accent-success)'};">
+                                ${vagasRestantes <= 0 ? 'Esgotado' : vagasRestantes + ' vaga' + (vagasRestantes > 1 ? 's' : '') + ' restante' + (vagasRestantes > 1 ? 's' : '')}
                             </span>
                             <button class="btn-remove" onclick="removerPresente(${presente.id})">
                                 Remover
@@ -1232,7 +1335,8 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function abrirMinhasReservas() {
@@ -1261,9 +1365,10 @@
 
                 if (error) throw error;
 
-                const minhasReservas = (data || []).filter(p => 
-                    p.reservado_por && p.reservado_por.toLowerCase() === nome.toLowerCase()
-                );
+                const minhasReservas = (data || []).filter(p => {
+                    const nomes = p.reservados_nomes || [];
+                    return nomes.some(n => n.toLowerCase() === nome.toLowerCase());
+                });
 
                 const resultado = document.getElementById('minhasReservasResultado');
                 const lista = document.getElementById('minhasReservasLista');
@@ -1293,16 +1398,31 @@
             if (!confirm('Deseja cancelar esta reserva?')) return;
 
             try {
+                const { data: presente, error: fetchError } = await supabaseClient
+                    .from('presentes')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                let nomes = presente.reservados_nomes || [];
+                const index = nomes.findIndex(n => n.toLowerCase() === nome.toLowerCase());
+                if (index !== -1) nomes.splice(index, 1);
+
                 const { error } = await supabaseClient
                     .from('presentes')
-                    .update({ reservado: false, reservado_por: null })
+                    .update({ 
+                        reservados_nomes: nomes, 
+                        reservado: false,
+                        reservado_por: nomes.length > 0 ? nomes.join(', ') : null
+                    })
                     .eq('id', id);
 
                 if (error) throw error;
 
                 alert('Reserva cancelada com sucesso!');
                 carregarPresentes();
-                // Recarregar a lista de reservas
                 document.getElementById('nomeBusca').value = nome;
                 buscarMinhasReservas(new Event('submit'));
             } catch (error) {
@@ -1335,5 +1455,7 @@
     </script>
 </body>
 </html>
+
+
 
 
