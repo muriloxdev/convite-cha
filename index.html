@@ -22,7 +22,7 @@
             --bg-secondary: #f7f5f2;
             --bg-card: #ffffff;
             --text-primary: #1a1a1a;
-            --text-secondary: #393939;
+            --text-secondary: #666666;
             --text-muted: #999999;
             --accent-primary: #2d2d2d;
             --accent-secondary: #8b7355;
@@ -776,11 +776,11 @@
             }
 
             .hero-title {
-                font-size: 5.5rem;
+                font-size: 4.5rem;
             }
 
             .hero-subtitle {
-                font-size: 1rem;
+                font-size: 2.75rem;
                 letter-spacing: 0.15em;
                 margin-bottom: 2rem;
             }
@@ -801,8 +801,8 @@
             }
 
             .hero-message {
-                font-size: 2.05rem;
-                line-height: 1.0;
+                font-size: .05rem;
+                line-height: 1.7;
                 margin-bottom: 2.5rem;
                 padding: 0 0.5rem;
             }
@@ -1021,10 +1021,10 @@
             <!-- SUBSTITUA ESTAS URLs PELAS SUAS FOTOS -->
             <!-- Wrapper de imagem para efeito de moldura -->
             <div class="hero-image-wrapper">
-                <img src="img/foto1.jpg" alt="Foto 1" class="hero-image">
+                <img src="/placeholder.svg?height=340&width=260" alt="Foto 1" class="hero-image">
             </div>
             <div class="hero-image-wrapper">
-                <img src="img/foto2.jpg" alt="Foto 2" class="hero-image">
+                <img src="/placeholder.svg?height=340&width=260" alt="Foto 2" class="hero-image">
             </div>
         </div>
         
@@ -1034,7 +1034,7 @@
         <p class="hero-message">
             Queridos amigos e familiares, estamos muito felizes em compartilhar este momento especial com vocês.
             Preparamos com carinho uma lista de presentes que nos ajudarão a construir nosso lar.
-            Sua presença significa muito para nós.
+            Sua presença e generosidade significam muito para nós.
         </p>
         
         <button class="btn-primary" onclick="mostrarPresentes()">Ver Lista de Presentes</button>
@@ -1054,6 +1054,7 @@
                 <button class="filter-btn" onclick="filtrarCategoria('cozinha')">Cozinha</button>
                 <button class="filter-btn" onclick="filtrarCategoria('eletrodomesticos')">Eletrodomésticos</button>
                 <button class="filter-btn" onclick="filtrarCategoria('cama')">Cama & Banho</button>
+                <button class="filter-btn" onclick="filtrarCategoria('decoracao')">Decoração</button>
                 <button class="filter-btn" onclick="filtrarCategoria('outros')">Outros</button>
             </div>
             
@@ -1278,10 +1279,7 @@
                             Quero Presentear
                         </button>
                     ` : `
-                        <button class="btn-reservar reservado" 
-                                onclick="abrirModalCancelar(${presente.id})">
-                            Cancelar Reserva
-                        </button>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; font-style: italic; padding: 0.75rem 0;">Reservado</p>
                     `}
                 </div>
                 `;
@@ -1663,6 +1661,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
