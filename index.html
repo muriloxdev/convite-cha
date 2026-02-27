@@ -3,1023 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chá de Panela - Nosso Grande Dia</title>
+    <title>Cha de Panela - Nosso Grande Dia</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Adicionando Google Fonts mais elegantes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Nova paleta de cores mais sofisticada e minimalista */
-        :root {
-            --bg-primary: #fdfcfa;
-            --bg-secondary: #f7f5f2;
-            --bg-card: #ffffff;
-            --text-primary: #1a1a1a;
-            --text-secondary: #666666;
-            --text-muted: #999999;
-            --accent-primary: #2d2d2d;
-            --accent-secondary: #8b7355;
-            --accent-light: #c4b5a0;
-            --accent-success: #4a7c59;
-            --accent-warning: #c17f59;
-            --border-subtle: #e8e4de;
-            --shadow-soft: 0 4px 20px rgba(0,0,0,0.04);
-            --shadow-medium: 0 8px 40px rgba(0,0,0,0.08);
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.7;
-            font-weight: 400;
-        }
-
-        /* Tipografia elegante com fonte serifada para títulos */
-        h1, h2, h3, .modal-title, .section-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 400;
-            letter-spacing: -0.02em;
-        }
-
-        /* Hero section completamente redesenhada */
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem 2rem;
-            text-align: center;
-            background: var(--bg-primary);
-            position: relative;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
-        }
-
-        /* Layout de imagens mais elegante com molduras */
-        .hero-images {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 4rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 800px;
-        }
-
-        .hero-image-wrapper {
-            position: relative;
-            padding: 12px;
-            background: var(--bg-card);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .hero-image {
-            width: 260px;
-            height: 340px;
-            object-fit: cover;
-            display: block;
-            filter: grayscale(10%);
-            transition: var(--transition);
-        }
-
-        .hero-image:hover {
-            filter: grayscale(0%);
-        }
-
-        /* Título principal com estilo editorial */
-        .hero-title {
-            font-size: 4.5rem;
-            font-weight: 300;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 3rem;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-        }
-
-        /* Mensagem com estilo mais refinado */
-        .hero-message {
-            max-width: 560px;
-            font-size: 1.05rem;
-            line-height: 1.9;
-            color: var(--text-secondary);
-            margin-bottom: 3.5rem;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.25rem;
-            font-style: italic;
-        }
-
-        /* Botão principal elegante e minimalista */
-        .btn-primary {
-            padding: 1.1rem 3.5rem;
-            background-color: var(--accent-primary);
-            color: white;
-            border: none;
-            border-radius: 0;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-secondary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        /* Seção de presentes redesenhada */
-        .presentes-section {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-            display: none;
-            background: var(--bg-primary);
-        }
-
-        .presentes-section.active {
-            display: block;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-            position: relative;
-        }
-
-        .section-title {
-            font-size: 3.5rem;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            font-weight: 300;
-        }
-
-        .section-subtitle {
-            font-size: 1rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-        }
-
-        /* Grid de presentes mais espaçado e limpo */
-        .presentes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        /* Cartão de presente minimalista */
-        .presente-card {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 0;
-            box-shadow: var(--shadow-soft);
-            transition: var(--transition);
-            border: 1px solid var(--border-subtle);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .presente-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--accent-secondary);
-            transform: scaleX(0);
-            transition: var(--transition);
-        }
-
-        .presente-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .presente-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .presente-card.reservado {
-            opacity: 0.6;
-        }
-
-        .presente-card.reservado::before {
-            background: var(--accent-warning);
-            transform: scaleX(1);
-        }
-
-        .presente-nome {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
-            font-weight: 500;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-        }
-
-        .presente-descricao {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .presente-cor {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: var(--bg-secondary);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .presente-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .status-badge {
-            padding: 0.4rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .status-disponivel {
-            background-color: rgba(74, 124, 89, 0.1);
-            color: var(--accent-success);
-        }
-
-        .status-reservado {
-            background-color: rgba(193, 127, 89, 0.1);
-            color: var(--accent-warning);
-        }
-
-        /* Botão de reserva mais elegante */
-        .btn-reservar {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--accent-primary);
-            background: transparent;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--accent-primary);
-        }
-
-        .btn-reservar.disponivel:hover {
-            background-color: var(--accent-primary);
-            color: white;
-        }
-
-        .btn-reservar.reservado {
-            border-color: var(--border-subtle);
-            color: var(--text-muted);
-        }
-
-        .btn-reservar.reservado:hover {
-            border-color: var(--accent-warning);
-            color: var(--accent-warning);
-        }
-
-        /* Filtros redesenhados */
-        .filter-container {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 0 0 4rem 0;
-            padding: 0 1rem;
-        }
-
-        .filter-btn {
-            padding: 0.8rem 1.8rem;
-            border: 1px solid var(--border-subtle);
-            background: transparent;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 500;
-            transition: var(--transition);
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .filter-btn:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-
-        .filter-btn.active {
-            background: var(--accent-primary);
-            color: white;
-            border-color: var(--accent-primary);
-        }
-
-        /* Modais redesenhados */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            padding: 3rem;
-            max-width: 480px;
-            width: 90%;
-            box-shadow: var(--shadow-medium);
-            animation: modalSlide 0.4s ease;
-        }
-
-        @keyframes modalSlide {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-title {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-            font-weight: 400;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 1rem;
-            border: 1px solid var(--border-subtle);
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            transition: var(--transition);
-            background: var(--bg-secondary);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            background: var(--bg-card);
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn-cancel {
-            flex: 1;
-            padding: 1rem;
-            background-color: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-subtle);
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition);
-        }
-
-        .btn-cancel:hover {
-            border-color: var(--text-primary);
-            color: var(--text-primary);
-        }
-
-        .btn-confirm {
-            flex: 1;
-            padding: 1rem;
-            background-color: var(--accent-primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition);
-        }
-
-        .btn-confirm:hover {
-            background-color: var(--accent-secondary);
-        }
-
-        /* Admin section redesenhada */
-        .admin-section {
-            display: none;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
-        .admin-section.active {
-            display: block;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .admin-header .section-title {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-
-        .btn-logout {
-            padding: 0.8rem 2rem;
-            background-color: transparent;
-            color: var(--accent-warning);
-            border: 1px solid var(--accent-warning);
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition);
-        }
-
-        .btn-logout:hover {
-            background-color: var(--accent-warning);
-            color: white;
-        }
-
-        /* Dashboard cards modernos */
-        .admin-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            padding: 2rem;
-            box-shadow: var(--shadow-soft);
-            text-align: center;
-            border: 1px solid var(--border-subtle);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--accent-secondary);
-        }
-
-        .stat-card.reserved::after {
-            background: var(--accent-warning);
-        }
-
-        .stat-card.available::after {
-            background: var(--accent-success);
-        }
-
-        .stat-number {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 3.5rem;
-            font-weight: 300;
-            color: var(--text-primary);
-            margin: 0.5rem 0;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .admin-form {
-            background: var(--bg-card);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .admin-form h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            font-weight: 400;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-        }
-
-        /* Rodapé minimalista */
-        .footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border-subtle);
-            margin-top: 4rem;
-        }
-
-        .footer p:first-child {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            font-style: italic;
-            color: var(--text-secondary);
-        }
-
-        .admin-trigger {
-            cursor: pointer;
-            opacity: 0.2;
-            transition: var(--transition);
-            display: inline-block;
-            padding: 0.5rem;
-        }
-
-        .admin-trigger:hover {
-            opacity: 1;
-        }
-
-        /* Lista de presentes admin */
-        .admin-presente-item {
-            padding: 1.5rem;
-            border: 1px solid var(--border-subtle);
-            margin-bottom: 1rem;
-            background: var(--bg-card);
-            transition: var(--transition);
-        }
-
-        .admin-presente-item:hover {
-            box-shadow: var(--shadow-soft);
-        }
-
-        .btn-remove {
-            padding: 0.5rem 1rem;
-            font-size: 0.7rem;
-            background: transparent;
-            color: #c44;
-            border: 1px solid #c44;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition);
-        }
-
-        .btn-remove:hover {
-            background: #c44;
-            color: white;
-        }
-
-        .presente-vagas {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent-secondary);
-            padding: 0.3rem 0.75rem;
-            background: rgba(193, 127, 89, 0.08);
-            border: 1px solid rgba(193, 127, 89, 0.2);
-            margin-top: 0.5rem;
-        }
-
-        /* Botão Minhas Reservas */
-        .btn-minhas-reservas {
-            padding: 0.8rem 2rem;
-            background: transparent;
-            border: 1px solid var(--accent-secondary);
-            color: var(--accent-secondary);
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition);
-        }
-
-        .btn-minhas-reservas:hover {
-            background: var(--accent-secondary);
-            color: white;
-        }
-
-        .minhas-reservas-lista {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .minha-reserva-item {
-            padding: 1.2rem;
-            border: 1px solid var(--border-subtle);
-            margin-bottom: 0.75rem;
-            background: var(--bg-secondary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .minha-reserva-item strong {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-
-        .minha-reserva-item .info {
-            flex: 1;
-        }
-
-        .minha-reserva-item .info small {
-            display: block;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-        }
-
-        .btn-cancelar-reserva {
-            padding: 0.5rem 1rem;
-            font-size: 0.7rem;
-            background: transparent;
-            color: var(--accent-warning);
-            border: 1px solid var(--accent-warning);
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .btn-cancelar-reserva:hover {
-            background: var(--accent-warning);
-            color: white;
-        }
-
-        .sem-reservas {
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-            padding: 2rem 0;
-        }
-
-        /* Responsividade - Tablets */
-        @media (max-width: 1024px) {
-            .presentes-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 2rem;
-            }
-
-            .presentes-section {
-                padding: 4rem 1.5rem;
-            }
-
-            .hero-title {
-                font-size: 3.5rem;
-            }
-
-            .section-title {
-                font-size: 3rem;
-            }
-
-            .dashboard-stats {
-                gap: 1rem;
-            }
-        }
-
-        /* Responsividade - Mobile */
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: 2rem 1.5rem;
-                min-height: 100vh;
-                min-height: 100dvh;
-            }
-
-            .hero-title {
-                font-size: 4.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.00rem;
-                letter-spacing: 0.15em;
-                margin-bottom: 2rem;
-            }
-            
-            .hero-image {
-                width: 100%;
-                max-width: 200px;
-                height: 260px;
-            }
-
-            .hero-image-wrapper {
-                padding: 8px;
-            }
-
-            .hero-images {
-                gap: 1rem;
-                margin-bottom: 2.5rem;
-            }
-
-            .hero-message {
-                font-size: 1.05rem;
-                line-height: 1.7;
-                margin-bottom: 2.5rem;
-                padding: 0 0.5rem;
-            }
-
-            .btn-primary {
-                padding: 1rem 2.5rem;
-                font-size: 0.75rem;
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .presentes-section {
-                padding: 3rem 1rem;
-            }
-
-            .section-header {
-                margin-bottom: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2.2rem;
-            }
-
-            .section-subtitle {
-                font-size: 0.8rem;
-            }
-
-            .presentes-grid {
-                grid-template-columns: 1fr;
-                gap: 1.25rem;
-            }
-
-            .presente-card {
-                padding: 1.5rem;
-            }
-
-            .presente-card:hover {
-                transform: none;
-            }
-
-            .presente-nome {
-                font-size: 1.4rem;
-            }
-
-            .filter-container {
-                gap: 0.4rem;
-                margin-bottom: 2.5rem;
-                padding: 0 0.5rem;
-            }
-
-            .filter-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.65rem;
-            }
-
-            .btn-minhas-reservas {
-                width: 100%;
-                max-width: 300px;
-                padding: 0.7rem 1.5rem;
-            }
-
-            .modal-content {
-                padding: 1.75rem;
-                width: 94%;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            .modal-title {
-                font-size: 1.6rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .form-input, .form-select {
-                padding: 0.85rem;
-                font-size: 0.95rem;
-            }
-
-            .form-actions {
-                flex-direction: column-reverse;
-                gap: 0.75rem;
-            }
-
-            .btn-cancel, .btn-confirm {
-                width: 100%;
-                text-align: center;
-            }
-
-            .admin-section {
-                padding: 2rem 1rem;
-            }
-
-            .admin-header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-
-            .admin-header h2 {
-                font-size: 2rem;
-            }
-
-            .dashboard-stats {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .stat-card {
-                padding: 1.25rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .admin-presente-item {
-                padding: 1.25rem;
-            }
-
-            .admin-presente-item > div {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .admin-presente-item > div > div:last-child {
-                flex-direction: row;
-                align-items: center;
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .btn-remove {
-                width: auto;
-            }
-
-            .minha-reserva-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-            }
-
-            .btn-cancelar-reserva {
-                width: 100%;
-                text-align: center;
-            }
-
-            .footer {
-                padding: 2rem 1rem;
-            }
-        }
-
-        /* Responsividade - Mobile pequeno */
-        @media (max-width: 400px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .hero-image {
-                max-width: 160px;
-                height: 210px;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .presente-nome {
-                font-size: 1.25rem;
-            }
-
-            .filter-btn {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.6rem;
-            }
-        }
-
-        /* Animacao suave de scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Touch-friendly: areas de toque maiores */
-        @media (pointer: coarse) {
-            .btn-reservar, .btn-primary, .btn-minhas-reservas, .filter-btn {
-                min-height: 48px;
-            }
-
-            .btn-cancelar-reserva, .btn-remove {
-                min-height: 44px;
-                padding: 0.65rem 1.25rem;
-            }
-
-            .form-input, .form-select {
-                min-height: 48px;
-            }
-        }
-
-        /* Prevenir zoom indesejado em inputs no iOS */
-        @media screen and (max-width: 768px) {
-            input[type="text"], input[type="number"], select, textarea {
-                font-size: 16px;
-            }
-        }
-
-        /* Selecao de texto personalizada */
-        ::selection {
-            background: var(--accent-light);
-            color: var(--text-primary);
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Tela de Boas-Vindas -->
     <section id="heroSection" class="hero-section">
         <div class="hero-images">
-            <!-- SUBSTITUA ESTAS URLs PELAS SUAS FOTOS -->
-            <!-- Wrapper de imagem para efeito de moldura -->
             <div class="hero-image-wrapper">
                 <img src="img/foto1.jpg" alt="Foto 1" class="hero-image">
             </div>
@@ -1028,19 +23,19 @@
             </div>
         </div>
         
-        <h1 class="hero-title">Nosso Chá de Panela</h1>
-        <p class="hero-subtitle">Estamos começando uma nova jornada juntos</p>
+        <h1 class="hero-title">Nosso Cha de Panela</h1>
+        <p class="hero-subtitle">Estamos comecando uma nova jornada juntos</p>
         
         <p class="hero-message">
-            Queridos amigos e familiares, estamos muito felizes em compartilhar este momento especial com vocês.
-            Preparamos com carinho uma lista de presentes que nos ajudarão a construir nosso lar.
-            Sua presença e generosidade significam muito para nós.
+            Queridos amigos e familiares, estamos muito felizes em compartilhar este momento especial com voces.
+            Preparamos com carinho uma lista de presentes que nos ajudarao a construir nosso lar.
+            Sua presenca e generosidade significam muito para nos.
         </p>
         
         <button class="btn-primary" onclick="mostrarPresentes()">Ver Lista de Presentes</button>
     </section>
 
-    <!-- Seção de Presentes -->
+    <!-- Secao de Presentes -->
     <section id="presentesSection" class="presentes-section">
         <div class="container">
             <div class="section-header">
@@ -1052,9 +47,8 @@
                 <button class="filter-btn active" onclick="filtrarCategoria('todas')">Todas</button>
                 <button class="filter-btn" onclick="filtrarCategoria('mesa')">Mesa</button>
                 <button class="filter-btn" onclick="filtrarCategoria('cozinha')">Cozinha</button>
-                <button class="filter-btn" onclick="filtrarCategoria('eletrodomesticos')">Eletrodomésticos</button>
+                <button class="filter-btn" onclick="filtrarCategoria('eletrodomesticos')">Eletrodomesticos</button>
                 <button class="filter-btn" onclick="filtrarCategoria('cama')">Cama & Banho</button>
-
                 <button class="filter-btn" onclick="filtrarCategoria('outros')">Outros</button>
             </div>
             
@@ -1069,7 +63,7 @@
         </div>
     </section>
 
-    <!-- Seção Admin -->
+    <!-- Secao Admin -->
     <section id="adminSection" class="admin-section">
         <div class="admin-header">
             <h2 class="section-title">Painel Administrativo</h2>
@@ -1086,7 +80,7 @@
                 <div class="stat-number" id="statReservados">0</div>
             </div>
             <div class="stat-card available">
-                <div class="stat-label">Disponíveis</div>
+                <div class="stat-label">Disponiveis</div>
                 <div class="stat-number" id="statDisponiveis">0</div>
             </div>
         </div>
@@ -1099,7 +93,7 @@
                     <input type="text" class="form-input" id="adminNome" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Descrição (opcional)</label>
+                    <label class="form-label">Descricao (opcional)</label>
                     <input type="text" class="form-input" id="adminDescricao">
                 </div>
                 
@@ -1108,9 +102,9 @@
                     <select class="form-input" id="adminCategoria" required>
                         <option value="mesa">Mesa</option>
                         <option value="cozinha">Cozinha</option>
-                        <option value="eletrodomesticos">Eletrodomésticos</option>
+                        <option value="eletrodomesticos">Eletrodomesticos</option>
                         <option value="cama">Cama & Banho</option>
-                        <option value="decoracao">Decoração</option>
+                        <option value="decoracao">Decoracao</option>
                         <option value="outros">Outros</option>
                     </select>
                 </div>
@@ -1123,7 +117,7 @@
                 <div class="form-group">
                     <label class="form-label">Quantidade de vagas</label>
                     <input type="number" class="form-input" id="adminVagas" min="1" value="1" required>
-                    <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Quantas pessoas podem escolher este presente (ex: 1 = apenas uma pessoa, 3 = até 3 pessoas)</small>
+                    <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Quantas pessoas podem escolher este presente (ex: 1 = apenas uma pessoa, 3 = ate 3 pessoas)</small>
                 </div>
                 
                 <button type="submit" class="btn-primary">Adicionar Presente</button>
@@ -1191,14 +185,14 @@
         </div>
     </div>
 
-    <!-- Rodapé -->
+    <!-- Rodape -->
     <footer class="footer">
         <p>Feito com amor para nosso grande dia</p>
-        <p class="admin-trigger" onclick="abrirModalAdmin()">©</p>
+        <p class="admin-trigger" onclick="abrirModalAdmin()">&copy;</p>
     </footer>
 
     <script>
-        // CONFIGURAÇÃO DO SUPABASE
+        // CONFIGURACAO DO SUPABASE
         const SUPABASE_URL = 'https://xbotnpnfztfbbjcsclce.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhib3RucG5menRmYmJqY3NjbGNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNDAzNzAsImV4cCI6MjA4MTkxNjM3MH0.EFGk2OZgkX6Xodarqmr_e3NvS8c0PSWFEtEp-2HSHF0';
         const SENHA_ADMIN = 'murilo';
@@ -1209,12 +203,31 @@
         let presenteSelecionado = null;
         let acaoModal = null;
         let categoriaAtual = 'todas';
-        let nomeReservadoPor = null;
         let modoAdmin = false;
+        let presentesCache = [];
 
+        // Inicializar o app
         document.addEventListener('DOMContentLoaded', () => {
             carregarPresentes();
+            iniciarRealtime();
         });
+
+        // Configurar Realtime do Supabase para atualizacoes automaticas
+        function iniciarRealtime() {
+            supabaseClient
+                .channel('presentes-realtime')
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'presentes' }, 
+                    (payload) => {
+                        console.log('Atualizacao em tempo real:', payload);
+                        carregarPresentes();
+                        if (modoAdmin) {
+                            carregarPresentesAdmin();
+                        }
+                    }
+                )
+                .subscribe();
+        }
 
         function mostrarPresentes() {
             document.getElementById('heroSection').style.display = 'none';
@@ -1237,7 +250,8 @@
 
                 if (error) throw error;
 
-                renderizarPresentes(data || []);
+                presentesCache = data || [];
+                renderizarPresentes(presentesCache);
             } catch (error) {
                 console.error('Erro ao carregar presentes:', error);
             }
@@ -1270,7 +284,7 @@
                     ${vagas > 1 ? `<span class="presente-vagas">${vagasRestantes} de ${vagas} vagas restantes</span>` : ''}
                     <div class="presente-status">
                         <span class="status-badge ${esgotado ? 'status-reservado' : 'status-disponivel'}">
-                            ${esgotado ? 'Esgotado' : 'Disponível'}
+                            ${esgotado ? 'Esgotado' : 'Disponivel'}
                         </span>
                     </div>
                     ${!esgotado ? `
@@ -1294,7 +308,7 @@
             });
             event.target.classList.add('active');
             
-            carregarPresentes();
+            renderizarPresentes(presentesCache);
         }
 
         function abrirModalReserva(id, reservado, reservadoPor) {
@@ -1345,7 +359,6 @@
             if (!nome) return;
 
             try {
-                // Buscar presente atual
                 const { data: presente, error: fetchError } = await supabaseClient
                     .from('presentes')
                     .select('*')
@@ -1406,7 +419,6 @@
                 }
 
                 fecharModal();
-                carregarPresentes();
             } catch (error) {
                 console.error('Erro:', error);
                 alert('Erro ao processar sua solicitacao.');
@@ -1466,8 +478,6 @@
 
                 alert('Presente adicionado com sucesso!');
                 document.getElementById('adminForm').reset();
-                carregarPresentes();
-                carregarPresentesAdmin();
             } catch (error) {
                 console.error('Erro ao adicionar presente:', error);
                 alert('Erro ao adicionar presente: ' + error.message);
@@ -1566,7 +576,6 @@
                 const { data, error } = await supabaseClient
                     .from('presentes')
                     .select('*')
-                    .eq('reservado', true)
                     .order('id', { ascending: true });
 
                 if (error) throw error;
@@ -1628,7 +637,6 @@
                 if (error) throw error;
 
                 alert('Reserva cancelada com sucesso!');
-                carregarPresentes();
                 document.getElementById('nomeBusca').value = nome;
                 buscarMinhasReservas(new Event('submit'));
             } catch (error) {
@@ -1651,8 +659,6 @@
                 if (error) throw error;
 
                 alert('Presente removido com sucesso!');
-                carregarPresentes();
-                carregarPresentesAdmin();
             } catch (error) {
                 console.error('Erro ao remover presente:', error);
                 alert('Erro ao remover presente: ' + error.message);
@@ -1661,6 +667,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
