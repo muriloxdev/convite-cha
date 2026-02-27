@@ -260,8 +260,14 @@
         function renderizarPresentes(presentes) {
             const grid = document.getElementById('presentesGrid');
             
+            const ordemCategorias = ['mesa', 'cozinha', 'eletrodomesticos', 'cama', 'outros'];
+            
             const presentesFiltrados = categoriaAtual === 'todas' 
-                ? presentes 
+                ? [...presentes].sort((a, b) => {
+                    const indexA = ordemCategorias.indexOf(a.categoria) !== -1 ? ordemCategorias.indexOf(a.categoria) : 999;
+                    const indexB = ordemCategorias.indexOf(b.categoria) !== -1 ? ordemCategorias.indexOf(b.categoria) : 999;
+                    return indexA - indexB;
+                })
                 : presentes.filter(p => p.categoria === categoriaAtual);
             
             if (presentesFiltrados.length === 0) {
@@ -667,6 +673,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
