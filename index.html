@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cha de Panela - Nosso Grande Dia</title>
+    <title>Chá de Panela - Nosso Grande Dia</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Adicionando Google Fonts mais elegantes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,12 +24,12 @@
         </div>
         
         <h1 class="hero-title">Nosso Chá de Panela</h1>
-        <p class="hero-subtitle">Estamos comecando uma nova jornada juntos</p>
+        <p class="hero-subtitle">Estamos começando uma nova jornada juntos</p>
         
         <p class="hero-message">
             Queridos amigos e familiares, estamos muito felizes em compartilhar este momento especial com vocês.
             Preparamos com carinho uma lista de presentes que nos ajudarão a construir nosso lar.
-            Sua presença e generosidade significam muito para nós.
+            Sua presença significa muito para nós.
         </p>
         
         <button class="btn-primary" onclick="mostrarPresentes()">Ver Lista de Presentes</button>
@@ -382,11 +382,6 @@
                         return;
                     }
 
-                    if (nomes.some(n => n.toLowerCase() === nome.toLowerCase())) {
-                        alert('Voce ja reservou este presente!');
-                        return;
-                    }
-
                     nomes.push(nome);
                     const esgotado = nomes.length >= vagas;
 
@@ -674,6 +669,7 @@
     </script>
 </body>
 </html>
+
 
 
 
