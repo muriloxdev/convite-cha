@@ -1000,3 +1000,50 @@ html {
     background: var(--accent-light);
     color: var(--text-primary);
 }
+
+/* Modal de Agradecimento */
+.modal-agradecimento .modal-content {
+    text-align: center;
+    max-width: 480px;
+}
+
+.modal-agradecimento .modal-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.modal-agradecimento .modal-mensagem {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.modal-agradecimento .modal-assinatura {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--accent-secondary);
+    font-weight: 600;
+}
+
+.modal-agradecimento .btn-fechar-agradecimento {
+    margin-top: 2rem;
+    padding: 0.8rem 2.5rem;
+    background: var(--accent-secondary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: var(--transition);
+}
+
+.modal-agradecimento .btn-fechar-agradecimento:hover {
+    background: var(--accent-primary);
+}
