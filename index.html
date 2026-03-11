@@ -181,11 +181,23 @@
             <div id="minhasReservasResultado" style="margin-top: 2rem; display: none;">
                 <div style="height: 1px; background: var(--border-subtle); margin-bottom: 1.5rem;"></div>
                 <div id="minhasReservasLista" class="minhas-reservas-lista"></div>
-            </div>
-        </div>
-    </div>
+  </div>
+  </div>
+  </div>
 
-    <!-- Rodape -->
+  <!-- Modal de Agradecimento -->
+  <div id="modalAgradecimento" class="modal modal-agradecimento">
+    <div class="modal-content">
+      <span class="modal-icon">&#10084;</span>
+      <p class="modal-mensagem">
+        Agradecemos de coracao pela escolha do presente do nosso cha de panela, seu carinho faz parte do inicio do nosso sonho.
+      </p>
+      <p class="modal-assinatura">Ass: Murilo e Yasmim</p>
+      <button class="btn-fechar-agradecimento" onclick="fecharModalAgradecimento()">Fechar</button>
+    </div>
+  </div>
+  
+  <!-- Rodape -->
     <footer class="footer">
         <p>Feito com amor para o nosso grande dia</p>
         <p class="admin-trigger" onclick="abrirModalAdmin()">&copy;</p>
@@ -395,7 +407,7 @@
                         .eq('id', presenteSelecionado);
 
                     if (error) throw error;
-                    alert('Presente reservado com sucesso!');
+                    mostrarAgradecimento();
                 } else {
                     const index = nomes.findIndex(n => n.toLowerCase() === nome.toLowerCase());
                     
@@ -425,6 +437,14 @@
                 console.error('Erro:', error);
                 alert('Erro ao processar sua solicitacao.');
             }
+        }
+
+        function mostrarAgradecimento() {
+            document.getElementById('modalAgradecimento').classList.add('active');
+        }
+
+        function fecharModalAgradecimento() {
+            document.getElementById('modalAgradecimento').classList.remove('active');
         }
 
         function abrirModalAdmin() {
@@ -669,6 +689,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
