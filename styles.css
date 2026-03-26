@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -113,13 +114,13 @@ h1, h2, h3, .modal-title, .section-title {
 /* Mensagem com estilo mais refinado */
 .hero-message {
     max-width: 560px;
-    font-size: 1.05rem;
     line-height: 1.9;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     margin-bottom: 3.5rem;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.25rem;
-    font-style: italic , bold;
+    font-size: 1.35rem;
+    font-style: italic;
+    font-weight: 600;
 }
 
 /* Botao principal elegante e minimalista */
@@ -995,55 +996,49 @@ html {
     }
 }
 
+/* Modal Agradecimento */
+.modal-agradecimento {
+    text-align: center;
+    max-width: 420px;
+}
+
+.agradecimento-icone {
+    font-size: 3.5rem;
+    color: var(--accent-secondary);
+    margin-bottom: 1rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.agradecimento-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.agradecimento-texto {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.agradecimento-assinatura {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--accent-secondary);
+    margin-bottom: 2rem;
+}
+
 /* Selecao de texto personalizada */
 ::selection {
     background: var(--accent-light);
     color: var(--text-primary);
-}
-
-/* Modal de Agradecimento */
-.modal-agradecimento .modal-content {
-    text-align: center;
-    max-width: 480px;
-}
-
-.modal-agradecimento .modal-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1.5rem;
-    display: block;
-}
-
-.modal-agradecimento .modal-mensagem {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
-    line-height: 1.8;
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
-    font-style: italic;
-}
-
-.modal-agradecimento .modal-assinatura {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    color: var(--accent-secondary);
-    font-weight: 600;
-}
-
-.modal-agradecimento .btn-fechar-agradecimento {
-    margin-top: 2rem;
-    padding: 0.8rem 2.5rem;
-    background: var(--accent-secondary);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: var(--transition);
-}
-
-.modal-agradecimento .btn-fechar-agradecimento:hover {
-    background: var(--accent-primary);
 }
