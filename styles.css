@@ -119,7 +119,7 @@ h1, h2, h3, .modal-title, .section-title {
     margin-bottom: 3.5rem;
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.25rem;
-    font-style: italic;
+    font-style: italic , bold;
 }
 
 /* Botao principal elegante e minimalista */
