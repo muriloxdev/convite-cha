@@ -181,23 +181,24 @@
             <div id="minhasReservasResultado" style="margin-top: 2rem; display: none;">
                 <div style="height: 1px; background: var(--border-subtle); margin-bottom: 1.5rem;"></div>
                 <div id="minhasReservasLista" class="minhas-reservas-lista"></div>
-  </div>
-  </div>
-  </div>
-
-  <!-- Modal de Agradecimento -->
-  <div id="modalAgradecimento" class="modal modal-agradecimento">
-    <div class="modal-content">
-      <span class="modal-icon">&#10084;</span>
-      <p class="modal-mensagem">
-        Agradecemos de coração pela escolha do presente do nosso chá de panela, seu carinho faz parte do início do nosso sonho.
-      </p>
-      <p class="modal-assinatura">Ass: Murilo e Yasmim</p>
-      <button class="btn-fechar-agradecimento" onclick="fecharModalAgradecimento()">Fechar</button>
+            </div>
+        </div>
     </div>
-  </div>
-  
-  <!-- Rodape -->
+
+    <!-- Modal Agradecimento -->
+    <div id="modalAgradecimento" class="modal">
+        <div class="modal-content modal-agradecimento">
+            <div class="agradecimento-icone">&#10084;</div>
+            <h2 class="agradecimento-titulo">Obrigado!</h2>
+            <p class="agradecimento-texto">
+                Agradecemos de coracao pela escolha do presente do nosso cha de panela, seu carinho faz parte do inicio do nosso sonho.
+            </p>
+            <p class="agradecimento-assinatura">Ass: Murilo e Yasmim</p>
+            <button class="btn-primary" onclick="fecharModalAgradecimento()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Rodape -->
     <footer class="footer">
         <p>Feito com amor para o nosso grande dia</p>
         <p class="admin-trigger" onclick="abrirModalAdmin()">&copy;</p>
@@ -363,6 +364,14 @@
             modal.classList.add('active');
         }
 
+        function mostrarAgradecimento() {
+            document.getElementById('modalAgradecimento').classList.add('active');
+        }
+
+        function fecharModalAgradecimento() {
+            document.getElementById('modalAgradecimento').classList.remove('active');
+        }
+
         function fecharModal() {
             document.getElementById('modalReserva').classList.remove('active');
             document.getElementById('nomeConvidado').value = '';
@@ -437,14 +446,6 @@
                 console.error('Erro:', error);
                 alert('Erro ao processar sua solicitacao.');
             }
-        }
-
-        function mostrarAgradecimento() {
-            document.getElementById('modalAgradecimento').classList.add('active');
-        }
-
-        function fecharModalAgradecimento() {
-            document.getElementById('modalAgradecimento').classList.remove('active');
         }
 
         function abrirModalAdmin() {
@@ -668,27 +669,36 @@
         }
 
         async function removerPresente(id) {
+            console.log('[v0] removerPresente chamado com id:', id);
+            
             if (!confirm('Tem certeza que deseja remover este presente?')) {
+                console.log('[v0] Usuário cancelou a remoção');
                 return;
             }
 
             try {
-                const { error } = await supabaseClient
+                console.log('[v0] Tentando remover presente do Supabase...');
+                const { data, error } = await supabaseClient
                     .from('presentes')
                     .delete()
-                    .eq('id', id);
+                    .eq('id', id)
+                    .select();
+
+                console.log('[v0] Resultado da remoção:', { data, error });
 
                 if (error) throw error;
 
                 alert('Presente removido com sucesso!');
+                carregarPresentesAdmin();
             } catch (error) {
-                console.error('Erro ao remover presente:', error);
+                console.error('[v0] Erro ao remover presente:', error);
                 alert('Erro ao remover presente: ' + error.message);
             }
         }
     </script>
 </body>
 </html>
+
 
 
 
