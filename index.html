@@ -669,23 +669,41 @@
         }
 
         async function removerPresente(id) {
+            console.log('[DEBUG] removerPresente chamado, id:', id);
+            
             if (!confirm('Tem certeza que deseja remover este presente?')) {
+                console.log('[DEBUG] Usuário cancelou');
                 return;
             }
 
             try {
-                const { error } = await supabaseClient
+                console.log('[DEBUG] Executando delete no Supabase...');
+                const { data, error, count } = await supabaseClient
                     .from('presentes')
                     .delete()
-                    .eq('id', id);
+                    .eq('id', id)
+                    .select();
 
-                if (error) throw error;
+                console.log('[DEBUG] Resposta do delete:', { data, error, count });
 
+                if (error) {
+                    console.log('[DEBUG] Erro retornado:', error);
+                    throw error;
+                }
+
+                console.log('[DEBUG] Delete bem-sucedido, recarregando listas...');
                 alert('Presente removido com sucesso!');
+                
+                console.log('[DEBUG] Chamando carregarPresentesAdmin...');
                 await carregarPresentesAdmin();
+                console.log('[DEBUG] carregarPresentesAdmin concluído');
+                
+                console.log('[DEBUG] Chamando carregarPresentes...');
                 await carregarPresentes();
+                console.log('[DEBUG] carregarPresentes concluído');
+                
             } catch (error) {
-                console.error('Erro ao remover presente:', error);
+                console.error('[DEBUG] Erro capturado:', error);
                 alert('Erro ao remover presente: ' + error.message);
             }
         }
